@@ -5,7 +5,7 @@ import numpy as np
 
 
 
-##Setup
+##Setup 
 
 WIDTH, HEIGHT = 1000, 800 ## screen dimensions
 CENTER = np.array([WIDTH / 2, HEIGHT /2]) ## initialize blackhole center position
@@ -13,6 +13,9 @@ CENTER = np.array([WIDTH / 2, HEIGHT /2]) ## initialize blackhole center positio
 pygame.init() ## start the pygame engine
 screen = pygame.display.set_mode((WIDTH,HEIGHT)) #create the windows
 clock = pygame.time.Clock()
+
+fade = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA) ## Transparency overlay settings
+fade.fill((0,0,0,25))
 
 ## Initialize Black hole properties 
 BH_MASS = 5000
@@ -40,6 +43,7 @@ class Particle:
 
         self.color = (255, random.randint(100,225), 0)
     def update(self):
+
         direction = CENTER - self.pos
         distance = np.linalg.norm(direction) ## computes the vector length.
 
@@ -59,7 +63,7 @@ class Particle:
             screen,
             self.color,
             self.pos.astype(int),
-            2
+            3
         )
 ##Create particles 
 particles = [Particle() for _ in range (300)]
@@ -68,13 +72,18 @@ particles = [Particle() for _ in range (300)]
 
 running = True
 while running:
-    screen.fill((0,0,10))
+
+    ##Apply the transparent fade
+    screen.blit(fade, (0,0))
 
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             running = False
+
     
-    pygame.draw.circle(screen, (0,0,0), CENTER.astype(int),EVENT_HORIZON) ## draw the blackhole 
+    
+    pygame.draw.circle(screen, (50,20,20),CENTER.astype(int),EVENT_HORIZON+8) ## draw red horizon ring 
+    pygame.draw.circle(screen, (0,0,0), CENTER.astype(int),EVENT_HORIZON) ## draw black hole
 
     new_particles = []
 
